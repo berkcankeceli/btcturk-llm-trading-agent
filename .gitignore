@@ -1,0 +1,13 @@
+.env
+*.log
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# runtime state / data / trade history — never commit real account data
+state.json
+*.jsonl
+*.db
+*.sqlite
+*.sqlite3
