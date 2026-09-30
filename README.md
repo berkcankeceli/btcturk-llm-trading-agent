@@ -43,6 +43,8 @@ guaranteed-returns product.
 main.py            Single "tick": check open positions for stop/target, then
                     look for a new entry if capital is idle. Meant to be run
                     periodically (cron).
+check_stops.py      Minute-level stop/target watcher (no LLM, no entries);
+                    shares a lock with main.py and exits via its own exit path.
 strategy.py         Candidate screening (momentum + pullback filter).
 decision.py         LLM prompt + call (Groq). Returns buy/hold + stop/target %.
 risk.py             Position sizing, exit price bounds, daily loss limit —
@@ -70,6 +72,38 @@ On each run:
 3. On a "buy" decision, size the position from total portfolio value (bounded
    by available cash and the minimum cash buffer), place a market order, and
    record entry cost and exit levels.
+
+## Minute-level stop watch
+
+**Why it exists:** `main.py` checks exits only once per tick (e.g. every 10 minutes), so a
+position is unprotected between ticks. In one live case an `HBAR_TRY` position had a planned
+8% stop, but price gapped through the stop between two ticks and the position closed at
+−11.3%. `check_stops.py` narrows that window to about a minute.
+
+It does one thing: it compares the latest price with each open position's stored
+`stop_loss_price` / `take_profit_price`. When a level is hit, it exits through the bot's
+own `handle_position()`, so the order, trade log, lesson and email are identical to a normal
+exit. It makes no LLM call, opens no entries and never changes stop/target levels. Ticker
+errors and rate limits are logged and retried the next minute; they never crash the script.
+
+**Locking:** both processes take the same exclusive lock (`$TMPDIR/trade-agent.lock`, or
+`LOCK_FILE` to override). They can never write `state.json` at the same time or sell the
+same position twice. The watcher waits up to 30 s for the lock and otherwise skips that
+minute, since the main tick checks exits itself. The main job waits for the lock
+(`flock -w`) instead of skipping (`flock -n`), so a watcher run landing on the same minute
+can't make the main tick drop out.
+
+```cron
+*/10 * * * * cd /path/to/bot && flock -w 60 /tmp/trade-agent.lock timeout 300 python3 main.py >> cron.log 2>&1
+*    * * * * cd /path/to/bot && timeout 120 python3 check_stops.py >> stop_check.log 2>&1
+```
+
+Start with `python check_stops.py --dry-run`: it logs every check and what it *would* sell,
+places no orders and writes nothing. Remove the flag once the log looks right.
+
+A stricter alternative is an exchange-side `stopMarket` order placed right after entry.
+The stop then lives on the exchange even if the server is down, but it needs order
+place/cancel management (there is no native OCO for the take-profit side).
 
 ## Setup
 
