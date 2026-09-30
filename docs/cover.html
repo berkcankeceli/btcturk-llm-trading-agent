@@ -1,0 +1,104 @@
+<!doctype html>
+<!-- Source of docs/cover.png. Render from the repo root:
+     chrome --headless=new --hide-scrollbars --window-size=1600,1200
+            --screenshot=docs/cover.png docs/cover.html
+     Contains no API keys, balances or trade data - only the bot's flow and its code-level rules. -->
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0e1116; --card:#171c24; --line:#2a3240; --ink:#e8edf4; --mute:#8a96a8; --acc:#ffc400; --acc2:#4fd1c5; --red:#ff6b6b; }
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1600px; height: 1200px; background: var(--bg); color: var(--ink);
+         font-family: Inter, system-ui, sans-serif; padding: 64px 90px; position: relative; overflow: hidden; }
+  body::before { content: ""; position: absolute; inset: 0;
+    background: radial-gradient(900px 500px at 85% -10%, rgba(255,196,0,.13), transparent 60%),
+                radial-gradient(800px 500px at -10% 110%, rgba(79,209,197,.10), transparent 60%); }
+  .kicker { font: 500 20px "JetBrains Mono", monospace; color: var(--acc); letter-spacing: .12em; position: relative; }
+  h1 { font-size: 64px; font-weight: 800; letter-spacing: -.02em; margin-top: 14px; position: relative; }
+  .sub { font-size: 26px; color: var(--mute); margin-top: 14px; position: relative; }
+  .grid { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px 44px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 26px 26px 24px;
+          height: 236px; position: relative; display: flex; flex-direction: column; }
+  .n { font: 500 18px "JetBrains Mono", monospace; color: var(--acc); }
+  .t { font-size: 29px; font-weight: 800; margin-top: 10px; line-height: 1.12; }
+  .d { font-size: 18.5px; color: var(--mute); margin-top: 10px; line-height: 1.4; flex: 1; }
+  .tag { align-self: flex-start; font: 500 16px "JetBrains Mono", monospace; color: var(--acc2);
+         background: rgba(79,209,197,.10); border: 1px solid rgba(79,209,197,.35); padding: 5px 10px; border-radius: 8px; }
+  .ai { border-color: rgba(255,196,0,.55); box-shadow: 0 0 0 1px rgba(255,196,0,.25), 0 10px 40px rgba(255,196,0,.08); }
+  .ai .tag { color: var(--acc); background: rgba(255,196,0,.10); border-color: rgba(255,196,0,.45); }
+  .risk { border-color: rgba(79,209,197,.55); box-shadow: 0 0 0 1px rgba(79,209,197,.2), 0 10px 40px rgba(79,209,197,.07); }
+  .arrow { position: absolute; top: 50%; right: -38px; width: 32px; height: 2px; background: var(--acc); }
+  .arrow::after { content: ""; position: absolute; right: -2px; top: -6px; border: 7px solid transparent; border-left: 10px solid var(--acc); border-right: 0; }
+  .down { position: absolute; left: 50%; bottom: -50px; width: 2px; height: 44px; background: var(--acc); }
+  .down::after { content: ""; position: absolute; bottom: -2px; left: -6px; border: 7px solid transparent; border-top: 10px solid var(--acc); border-bottom: 0; }
+  .row2 { direction: rtl; grid-template-columns: 1.55fr 1fr 1fr; } .row2 > * { direction: ltr; }
+  .row2 .arrow { right: auto; left: -38px; transform: scaleX(-1); }
+  .row2 .card { height: 300px; }
+  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; margin-top: 14px; flex: 1; }
+  .chk { background: #121820; border: 1px solid var(--line); border-radius: 12px; padding: 11px 14px; }
+  .chk b { display: block; font-size: 18px; }
+  .chk span { font: 500 14.5px "JetBrains Mono", monospace; color: var(--acc2); }
+  .chk.new { border-color: rgba(255,196,0,.5); }
+  .chk.new span { color: var(--acc); }
+  .loop { position: relative; margin-top: 30px; display: flex; align-items: center; gap: 14px;
+          font-size: 19px; color: var(--mute); }
+  .loop i { font-style: normal; font: 500 16px "JetBrains Mono", monospace; color: var(--acc);
+            border: 1px dashed rgba(255,196,0,.55); padding: 5px 10px; border-radius: 8px; }
+  .foot { position: relative; margin-top: 26px; display: flex; gap: 16px; flex-wrap: wrap; }
+  .pill { font-size: 20px; font-weight: 600; padding: 11px 19px; border-radius: 999px; border: 1px solid var(--line); background: #131820; }
+  .pill b { color: var(--acc); }
+  .panels { position: relative; margin-top: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .panel { background: #0b0e13; border: 1px solid var(--line); border-radius: 14px; padding: 16px 20px; }
+  .panel h4 { font: 500 14px "JetBrains Mono", monospace; color: var(--mute); letter-spacing: .08em; margin-bottom: 8px; }
+  .panel pre { font: 500 15.5px/1.55 "JetBrains Mono", monospace; color: var(--ink); white-space: pre; }
+  .k { color: var(--acc2); } .s { color: var(--acc); } .m { color: var(--mute); } .ok { color: #7ee787; }
+</style>
+</head>
+<body>
+  <div class="kicker">SCHEDULED · RULE-BOUND · LLM-ASSISTED</div>
+  <h1>BtcTurk LLM Trading Agent</h1>
+  <div class="sub">An LLM picks the entry. Hard-coded rules own sizing, exits and the kill switch.</div>
+
+  <div class="grid" style="margin-top:44px">
+    <div class="card"><div class="n">01</div><div class="t">Market scan</div><div class="d">Every TRY pair from the public ticker, plus Fear &amp; Greed and news context.</div><div class="tag">BtcTurk REST</div><div class="arrow"></div></div>
+    <div class="card"><div class="n">02</div><div class="t">Candidate filter</div><div class="d">Momentum + pullback screen: up on the day, not at the top. Top 5 only.</div><div class="tag">rule-based</div><div class="arrow"></div></div>
+    <div class="card ai"><div class="n">03</div><div class="t">LLM decision</div><div class="d">Buy or hold + proposed stop/target as strict JSON. Past lessons in the prompt.</div><div class="tag">Groq LLM</div><div class="down"></div></div>
+  </div>
+
+  <div class="grid row2" style="margin-top:56px">
+    <div class="card risk"><div class="n">04</div><div class="t">Risk controls <span style="font-weight:600;color:var(--mute);font-size:20px">· enforced in code</span></div>
+      <div class="checks">
+        <div class="chk"><b>Stop-loss clamp</b><span>4–15 % bound</span></div>
+        <div class="chk"><b>Take-profit clamp</b><span>8–30 % bound</span></div>
+        <div class="chk"><b>Daily loss limit</b><span>circuit breaker</span></div>
+        <div class="chk new"><b>1-minute stop watch</b><span>cron · file lock</span></div>
+      </div>
+      <div class="arrow"></div></div>
+    <div class="card"><div class="n">05</div><div class="t">Order</div><div class="d">Portfolio-% sizing with cash buffer, market order, fee-aware fills.</div><div class="tag">HMAC-signed</div><div class="arrow"></div></div>
+    <div class="card"><div class="n">06</div><div class="t">Notify &amp; learn</div><div class="d">Trade mail, periodic report, and every exit becomes a lesson.</div><div class="tag">Resend</div></div>
+  </div>
+
+  <div class="loop"><i>feedback loop</i> each closed position is written as a plain-language lesson → fed into the next LLM prompt</div>
+
+  <div class="foot">
+    <div class="pill"><b>LLM never</b> sizes or exits</div>
+    <div class="pill"><b>no-withdraw</b> API key</div>
+    <div class="pill"><b>dry-run</b> mode</div>
+    <div class="pill"><b>fee-aware</b> PnL</div>
+    <div class="pill"><b>zero-cost</b> LLM tier</div>
+  </div>
+
+  <div class="panels">
+    <div class="panel"><h4>LLM OUTPUT · SCHEMA (ILLUSTRATIVE)</h4>
+<pre>{ <span class="k">"action"</span>: <span class="s">"buy" | "hold"</span>,
+  <span class="k">"symbol"</span>: <span class="s">"COIN_TRY"</span>,
+  <span class="k">"stop_loss_pct"</span>: <span class="m">n</span>, <span class="k">"take_profit_pct"</span>: <span class="m">n</span> }  <span class="m">→ clamped in risk.py</span></pre></div>
+    <div class="panel"><h4>STOP WATCH · EVERY 60 s (ILLUSTRATIVE)</h4>
+<pre><span class="m">[STOP-CHECK]</span> COIN_TRY last &gt; stop, &lt; target <span class="ok">→ OK</span>
+<span class="m">[STOP-CHECK]</span> lock busy (main tick) <span class="m">→ skip</span>
+<span class="m">[STOP-CHECK]</span> last ≤ stop <span class="s">→ sell via bot's own exit</span></pre></div>
+  </div>
+</body>
+</html>
